@@ -14421,7 +14421,7 @@ __publicField(SpiningCube, "TypeName", "SpiningCube");
 /* Properties that are configurable in the editor */
 __publicField(SpiningCube, "Properties", {
   vrCamera: Property.object(null),
-  speed: Property.float(5)
+  speed: Property.float(0.5)
 });
 /* Add other component types here that your component may
  * create. They will be registered with this component */
