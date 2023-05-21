@@ -14373,9 +14373,9 @@ var SpiningCube = class extends Component {
     this.rotation = new Float32Array(4);
     quat_exports.fromEuler(this.rotation, 1, 1, 0);
     this.tmpQuat = quat_exports.create();
-    this.direction = vec3.create();
-    this.cubeVec = vec3.create();
-    this.cameraVec = vec3.create();
+    this.direction = vec3_exports.create();
+    this.cubeVec = vec3_exports.create();
+    this.cameraVec = vec3_exports.create();
   }
   start() {
     console.log("start() with param", this.param);
@@ -14387,8 +14387,8 @@ var SpiningCube = class extends Component {
     quat_exports.scale(this.tmpQuat, this.rotation, dt);
     this.cube.rotateObject(this.tmpQuat);
     if (this.vrCamera && this.cubeVec && this.cameraVec) {
-      vec3.copy(this.cubeVec, this.direction);
-      vec3.scale(this.cube, this.cubeVec, dt);
+      vec3_exports.copy(this.cubeVec, this.direction);
+      vec3_exports.scale(this.cube, this.cubeVec, dt);
       this.cube.translateLocal(this.cubeVec);
       if (this.angleBetweenCubeAndCamera() > Math.PI / 2) {
         this.spawn();
@@ -14398,10 +14398,10 @@ var SpiningCube = class extends Component {
   angleBetweenCubeAndCamera() {
     this.cube.getPositionWorld(this.cubeVec);
     this.vrCamera.getTranslationWorld(this.cameraVec);
-    vec3.subtract(this.cubeVec, this.cubeVec, this.cameraVec);
-    vec3.normalize(this.cubeVec, this.cubeVec);
+    vec3_exports.subtract(this.cubeVec, this.cubeVec, this.cameraVec);
+    vec3_exports.normalize(this.cubeVec, this.cubeVec);
     this.vrCamera.getForward(this.cameraVec);
-    return vec3.angle(this.cubeVec, this.cameraVec);
+    return vec3_exports.angle(this.cubeVec, this.cameraVec);
   }
   spawn() {
     if (this.vrCamera == null) {
@@ -14409,20 +14409,19 @@ var SpiningCube = class extends Component {
       return;
     }
     this.vrCamera.getForward(this.direction);
-    vec3.copy(this.cubeVec, this.direction);
-    vec3.scale(this.cubeVec, this.cubevec, 30);
+    vec3_exports.copy(this.cubeVec, this.direction);
+    vec3_exports.scale(this.cubeVec, this.cubeVec, 30);
     this.vrCamera.getPositionWorld(this.cameraVec);
-    vec3.add(this.cubeVec, this.cubeVec, this.cameraVec);
+    vec3_exports.add(this.cubeVec, this.cubeVec, this.cameraVec);
     this.cube.setPositionWorld(this.cubeVec);
-    vec3.scale(this.diretion, this.direction, -this.speed);
+    vec3_exports.scale(this.direction, this.direction, -this.speed);
   }
 };
 __publicField(SpiningCube, "TypeName", "SpiningCube");
 /* Properties that are configurable in the editor */
 __publicField(SpiningCube, "Properties", {
   vrCamera: Property.object(null),
-  speed: Property.float(5),
-  initialDistance: Property.float(30)
+  speed: Property.float(5)
 });
 /* Add other component types here that your component may
  * create. They will be registered with this component */
