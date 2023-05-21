@@ -14373,21 +14373,56 @@ var SpiningCube = class extends Component {
     this.rotation = new Float32Array(4);
     quat_exports.fromEuler(this.rotation, 1, 1, 0);
     this.tmpQuat = quat_exports.create();
+    this.direction = vec3.create();
+    this.cubeVec = vec3.create();
+    this.cameraVec = vec3.create();
   }
   start() {
     console.log("start() with param", this.param);
     this.cube = this.object;
     console.log("Object ready for action. Object name: " + this.cube.name);
+    this.spawn();
   }
   update(dt) {
     quat_exports.scale(this.tmpQuat, this.rotation, dt);
     this.cube.rotateObject(this.tmpQuat);
+    if (this.vrCamera && this.cubeVec && this.cameraVec) {
+      vec3.copy(this.cubeVec, this.direction);
+      vec3.scale(this.cube, this.cubeVec, dt);
+      this.cube.translateLocal(this.cubeVec);
+      if (this.angleBetweenCubeAndCamera() > Math.PI / 2) {
+        this.spawn();
+      }
+    }
+  }
+  angleBetweenCubeAndCamera() {
+    this.cube.getPositionWorld(this.cubeVec);
+    this.vrCamera.getTranslationWorld(this.cameraVec);
+    vec3.subtract(this.cubeVec, this.cubeVec, this.cameraVec);
+    vec3.normalize(this.cubeVec, this.cubeVec);
+    this.vrCamera.getForward(this.cameraVec);
+    return vec3.angle(this.cubeVec, this.cameraVec);
+  }
+  spawn() {
+    if (this.vrCamera == null) {
+      console.warn("Can't define player position");
+      return;
+    }
+    this.vrCamera.getForward(this.direction);
+    vec3.copy(this.cubeVec, this.direction);
+    vec3.scale(this.cubeVec, this.cubevec, 30);
+    this.vrCamera.getPositionWorld(this.cameraVec);
+    vec3.add(this.cubeVec, this.cubeVec, this.cameraVec);
+    this.cube.setPositionWorld(this.cubeVec);
+    vec3.scale(this.diretion, this.direction, -this.speed);
   }
 };
 __publicField(SpiningCube, "TypeName", "SpiningCube");
 /* Properties that are configurable in the editor */
 __publicField(SpiningCube, "Properties", {
-  param: Property.float(1)
+  vrCamera: Property.object(null),
+  speed: Property.float(5),
+  initialDistance: Property.float(30)
 });
 /* Add other component types here that your component may
  * create. They will be registered with this component */
